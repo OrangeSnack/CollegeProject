@@ -2,8 +2,8 @@
 
 int main() {
 
-    printf("test\n");
-    
+    printf("Hello World~\n");
+
     system("pause");
     return 0;
 }
