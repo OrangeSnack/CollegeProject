@@ -4,7 +4,7 @@ int main() {
     system("chcp 65001");
     system("cls");
 
-    printf("¸ŞÀÎ ÇÔ¼ö");
+    printf("ë©”ì¸ í•¨ìˆ˜");
 
     system("pause");
     return 0;
