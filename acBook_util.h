@@ -21,6 +21,9 @@
     //0: 다른것, 1: ↑, 2: ←, 3: →, 4: ↓, 5: 엔터, 6: Esc
     int kbArrow();
 
+    //selectUi 하위함수
+    int checkOverLine(int line, int current);
+
     //키보드로 입력받는 선택GUI.
     //시작하는 x,y좌표, 선택할수 있는 라인 갯수를 입력
     //사용하기전 사용할 라인에 \t를 하나씩 출력해놓아야함
