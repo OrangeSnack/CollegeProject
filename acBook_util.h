@@ -11,8 +11,12 @@
     #define TRUE 1
     #define FALSE 0
 
+    #include <stdio.h>
     #include <windows.h>
     #include <conio.h>
+
+    //두 문자열 입력받고 다르면 0, 같으면 1 출력
+    int compare(char *p1, char *p2);
 
     //커서위치 이동
     void gotoxy(int x, int y);
