@@ -1,5 +1,14 @@
 #include "acBook_util.h"
 
+//두 문자열 입력받고 다르면 0, 같으면 1 출력
+int compare(char *p1, char *p2)
+{
+  if(strcmp(p1,p2) == FALSE)
+    return TRUE;
+  else
+    return FALSE;
+}
+
 //커서위치 이동
 void gotoxy(int x, int y)
 {
@@ -53,9 +62,9 @@ int kbArrow()
 int checkOverLine(int line, int current)
 {
   if(current < 0 || current > line-1)
-    return 1;
+    return TRUE;
   else
-    return 0;
+    return FALSE;
 }
 
 //키보드로 입력받는 선택GUI. x,y좌표, 선택할수 있는 라인 갯수를 입력
@@ -90,7 +99,7 @@ int selectUi(int x, int y, int line)
           printf(">>");
   }
     }
-    else if(keyinput == 1)
+    else if(keyinput == TRUE)
     {
       if(!checkOverLine(line, currentSelection-1))
       {
