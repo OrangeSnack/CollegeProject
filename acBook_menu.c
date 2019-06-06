@@ -1,7 +1,7 @@
 #include <acbook.h>
 #include "stdio.h" 
 #include "conio.h" 
-#include "string.h" 
+#include "string.h"
 
 typedef struct UserInformation {
 	char id[16];
@@ -53,12 +53,12 @@ void getpassword(char parm_password[])
 			parm_password[index++] = input;
 		}
 	}
-	printf("\\n");
+	printf("\n");
 }
 
 void UserRegister()
 {
-	printf("저희 시스템에 회원 등록하시려면 다음 정보를 입력하셔야 합니다.\\n\\n");
+	printf("저희 시스템에 회원 등록하시려면 다음 정보를 입력하셔야 합니다.\n\n");
 
 	printf("1. Input ID: ");
 	gets(g_user_data[g_user_count].id);
@@ -72,7 +72,7 @@ void UserRegister()
 	gets(g_user_data[g_user_count].registration_number);
 	g_user_count++;
 
-	printf("회원이 되신걸 축하드립니다.. \\n\\n");
+	printf("회원이 되신걸 축하드립니다.. \n\n");
 }
 
 main()
@@ -92,9 +92,9 @@ main()
 			if (!strcmp(g_user_data[index].id, id)) {
 				if (!strcmp(g_user_data[index].password, password)) {
 					success_login = 1;
-					printf("성공적으로 로그인 했습니다. ^^; \\n\\n");
+					printf("성공적으로 로그인 했습니다. ^^; \n\n");
 				}
-				else printf("암호가 틀렸습니다. ㅡㅡ! \\n\\n");
+				else printf("암호가 틀렸습니다. ㅡㅡ! \n\n");
 				break;
 			}
 		}
@@ -102,9 +102,9 @@ main()
 		if (index == g_user_count) {
 			printf("님이 입력하신 ID는 등록이 되어있지 않습니다. 등록하시겠습니까? ( y / n ): ");
 			input = getche();
-			printf("\\n\\n");
+			printf("\n\n");
 			if (input == 'y' || input == 'Y') UserRegister();
-			else printf("다시 입력하세요...\\n\\n");
+			else printf("다시 입력하세요...\n\n");
 		}
 	}
 
