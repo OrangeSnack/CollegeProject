@@ -9,4 +9,25 @@
 #ifndef acBook_orderConverter
     #define acBook_orderConverter
 
+    #include <stdlib.h>
+
+    // 테이블 연산 파일
+    #include "acBook_operationTable.h"
+
+    typedef struct _Table Table;
+
+    // 단일 명령 실행 전반을 처리하는 함수
+    // 단일 문자열 형태의 명령어를 받아 변환, 수행하고, 테이블을 반환.
+    // 반환하는 테이블은 
+    Table* order_manager(char* order_string);
+
+    // 문자열을 명령어 큐로 변환해주는 함수.
+    Order_queue* convert_str_to_order(Order_queue* order, char* order_string, int string_length);
+
+    // 명령어를 해석해서 문자열 리스트 형으로 반환하기 위한 'queue'
+    typedef struct _Order_queue {
+        char**  order;      // 명령어 문자열. 동적할당. 'table_manager'에서 반환.
+        Order_queue* next;  // 다음 명령을 가리키는 포인터.
+    } Order_queue;
+
 #endif
