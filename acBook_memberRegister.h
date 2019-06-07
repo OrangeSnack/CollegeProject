@@ -9,14 +9,13 @@
     #define acBook_memberRegister
 
 
-#include "acBook_util.h"
-#include "acBook_memberLogin.h"
-#include <string.h>
+#include "acBook_memberUtil.h"
 
 
 //회원가입 메인함수
 int registerMain();
 
-//동일 아이디가 있을시에 나오는 출력
-void sameId();
+//아이디 중복 확인 함수
+void idCheck(char *id);
+
 #endif
