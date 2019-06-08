@@ -14,43 +14,27 @@ int loginMain()
   loginSys(pw, "PW", 1);
   printf("\n");
 
-  //로그인 성공여부
-  int check = /* loginCheck(id,pw) */;
+  //DB에 ID,PW 전송
+  loginCheck(id, pw);
 
-  if(check == TRUE)
-    printf("로그인 성공!!\n");
-  else
-    printf("로그인 실패..\n");
-
-  return check;
+  return 0;
 }
 
-//문자열 입력받고 p1에다가 복사
-//secure에 1 입력시 입력받는 문자들을 *로 출력
-void inputSys(const int secure, char *p1)
+//로그인 성공여부 출력
+int loginCheck(char *id, char *pw)
 {
-	char s1[MAXNUM] = { '\0' };
-	char c1 = '\0';
-	char temp[2] = { '\0', '\0'};
+  int boolean = login(id,pw);
 
-	while(c1 != 13)
-	{
-		c1 = getch();
-		if(c1 == 13)
-			break;
-    else if(c1 == 8)
-      continue;
+  if(boolean ==TRUE);
+  {
+    printf("\n 로그인 성공! \n");
+    strcpy(logined_id, id);
+    strcpy(logined_pw, pw);
+  }
+  else if(boolean == FALSE)
+    printf("\n 로그인 실패! \n");
 
-		temp[0] = c1;
-    if(secure == 1)
-      printf("*");
-    else
-      printf("%c", c1);
-
-		strcat(s1, temp);
-	}
-
-	strcpy(p1, s1);
+    return 0;
 }
 
 //로그인 입력부 출력
@@ -63,16 +47,4 @@ void loginSys(char *p1, const char *str, const int secure)
   inputSys(secure, arr);
 
   strcpy(p1, arr);
-}
-
-//ID DB에 출력해주는 함수
-char* idOut(char *id)
-{
-  return id;
-}
-
-//PW DB에 출력해주는 함수
-char* pwOut(char *pw)
-{
-  return pw;
 }

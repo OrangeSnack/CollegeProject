@@ -14,6 +14,11 @@
     #include <stdio.h>
     #include <windows.h>
     #include <conio.h>
+    #include <string.h>
+
+    //문자열 입력받고 p1에다가 복사
+    //secure에 1 입력시 입력받는 문자들을 *로 출력
+    void inputSys(const int secure, char *p1);
 
     //두 문자열 입력받고 다르면 0, 같으면 1 출력
     int compare(char *p1, char *p2);
