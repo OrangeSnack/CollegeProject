@@ -59,7 +59,7 @@
     } Table;
 
     // 조작 명령을 받아 테이블 연산을 실행해 반환.
-    Table** table_manager(Order_queue* order);
+    Table_list* table_manager(Order_queue* order);
     // 기타 부속함수.
     void table_list_default_setting(Table_list* target, int max_size);
 

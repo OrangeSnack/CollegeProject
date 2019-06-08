@@ -1,7 +1,7 @@
 #include "acBook_operationTable.h"
 
 
-Table** table_manager(Order_queue* order) {
+Table_list* table_manager(Order_queue* order) {
     static Table_list main_table_list;      // 삭제 혹은 프로그램 종료 전까지 유지되는 테이블 리스트
     static Table_list temp_table_list;      // 매 명령 실행 요청이 들어올 때마다 자동으로 삭제되는 임시 테이블 리스트
     static Table_list return_table_list;    // 반환값으로 전달 될 테이블 리스트. 다른 리스트들의 값을 복사해 이용.
@@ -35,7 +35,7 @@ Table** table_manager(Order_queue* order) {
         // 열람할 테이블 지정.
     // 수행된 명령은 자동으로 메모리 반환.
 
-    return return_table_list.address;
+    return &return_table_list;
 }
 
 void table_list_default_setting(Table_list* target, int max_size) {

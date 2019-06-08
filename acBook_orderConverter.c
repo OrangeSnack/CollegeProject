@@ -1,6 +1,6 @@
 #include "acBook_orderConverter.h"
 
-Table* order_manager(char* order_string) {
+Table_list* order_manager(char* order_string) {
     Order_queue* order = (Order_queue*) malloc(sizeof(Order_queue));
     order->order = NULL;
     order->next = NULL;
