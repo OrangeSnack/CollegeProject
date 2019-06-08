@@ -19,4 +19,12 @@ char* idOut(char *id);
 //PW DB에 출력해주는 함수
 char* pwOut(char *pw);
 
+//수정 명령
+Table_list* modify(char* id, char* pw);
+
+//가입 명령
+Table_list* register(char* id, char* pw);
+
+//로그인 명령
+Table_list* login(char* id, char* pw);
 #endif

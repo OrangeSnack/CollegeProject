@@ -19,6 +19,17 @@ char* pwOut(char *pw)
   return pw;
 }
 
+//수정 명령
+Table_list* modify(char* id, char* pw) {
+    char temp[30] = {0, };
+
+    sprintf(temp, "%s%s%s%s%s%s", "modify ", "(", logined_id, ", ", id, ", ", logined_pw, ", ", pw, ")");
+
+    return order_manager(temp);
+}
+
+
+
 //가입 명령
 Table_list* register(char* id, char* pw) {
     char temp[30] = {0, };

@@ -8,6 +8,18 @@ int modifyMain()
 
   willModify();
 
+  if(login_status)
+  {
+    printf("\n아이디 변경 : ");
+    inputSys(0, id);
+    printf("\n비밀번호 변경 : ")
+    inputSys(0, pw);
+
+    modify(id, pw);
+    printf("\n변경이 완료되었습니다!\n");
+  }
+  else
+    printf("\n 오류! 변경할 회원정보가 없습니다!\n");
 
   return 0;
 }
