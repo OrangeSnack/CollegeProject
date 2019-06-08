@@ -12,11 +12,10 @@ char* pwOut(char *pw)
   return pw;
 }
 
-
 Table_list* login(char* id, char* pw) {
     char temp[30] = {0, };
-    
+
     sprintf(temp, "%s%s%s%s%s%s", "login ", "(", id, ", ", pw, ")");
-    
+
     return order_manager(temp);
 }

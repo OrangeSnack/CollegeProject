@@ -26,7 +26,7 @@ int loginMain()
   else
     printf("로그인 실패..\n");
 
-  return check;
+  return 0;
 }
 
 //로그인 입력부 출력
