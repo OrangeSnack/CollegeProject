@@ -31,10 +31,10 @@
     typedef struct _Cursor Cursor;
 
     // 테이블 리스트 구조체
-    // char** name;
-    // Table** address;
-    // int num;
-    // int max_size;
+    // - char** name;
+    // - Table** address;
+    // - int num;
+    // - int max_size;
     typedef struct _Table_list {
         char** name;            // 테이블의 이름.
         Table** address;        // 테이블의 주소
@@ -43,13 +43,15 @@
     } Table_list;
 
     // 개요 : 테이블 구조체
-    // - char* name;
+    // - char** name;    
+    // - Table** address; 
     // - Col* start_col;
     // - int num_col;
     // - int num_record;
     // - Cursor* cursor;
     typedef struct _Table {
-        char* name;         // 테이블의 이름
+        char** name;        // 테이블 리스트에 기록된 테이블 이름 위치
+        Table** address;    // 테이블 리스트에 기록된 테이블 주소 위치
         Col* start_col;     // 시작열을 가리키는 포인터.
         int num_col;        // 열 갯수
         int num_record;     // 행 갯수.
@@ -67,9 +69,7 @@
     Table* new_table(char* name, Table_list* target);
     // 테이블 삭제 함수.
     // target : 삭제할 테이블 주소
-    // main_list : 메인 테이블 리스트 
-    // temp_list : 임시 테이블 리스트 
-    void delete_table(Table* target, Table_list* main_list, Table_list* temp_list);
+    void delete_table(Table* target);
     // 임시 테이블로 변경
     // target : 변경시킬 테이블 주소
     // main_list : 메인 테이블 리스트
@@ -103,17 +103,16 @@
     // 생성위치 : 현재 커서가 지정하고 있는 위치 다음.
     // 레코드가 있는 상태에서 열을 추가시키면, 그 열의 데이터는 NULL 으로 초기화.
     // name : 새로 생성할 열의 이름.
-    Col* new_col(Cursor* cursor, char* name);
+    Col* new_col(Table* target, char* name);
     // 열 삭제 함수.
-    // name : 삭제할 열의 이름
-    void delete_col(Cursor* cursor, char* name);
+    // cursor : 삭제할 열의 위치
+    void delete_col(Table* target);
     // 열 추가 함수.
     // 생성위치 : 현재 커서가 지정하고 있는 위치 다음.
-    Col* add_col(Cursor* cursor, char* name, Data* data_start);
+    Col* merge_col(Table* target, char* name, Data* data_start);
     // 열 이동 함수.
-    // 커서가 가리키고 있는 열을 좌, 우 일정칸 움직임. 실행 후 0을 반환.
-    // 만약 이동할 공간이 불충분하다면 실행하지 않고 -1을 반환.
-    int move_col(Cursor* cursor, int move_length);
+    // name : 이동시킬 위치 열 이름. 해당 열 다음에 삽입됨.
+    void move_col(Table* target, char* name);
 
 
     // 개요 : 데이터 구조체. 
@@ -122,28 +121,29 @@
     // - Data* next;      
     // - Data* prev;      
     typedef struct _Data {
-        char* contents;     // 해당 위치에 기록된 데이터 내용.
+        char* content;      // 해당 위치에 기록된 데이터 내용.
         Data* next;         // 다음 레코드 데이터. 끝이면 NULL.
         Data* prev;         // 이전 레코드 데이터. 시작이면 NULL.
     } Data;
 
     // 레코드 생성 함수.
+    // 생성 위치는, 커서의 다음.
     // content : 레코드에 삽입될 문자열 배열
-    Data* new_record(Cursor* cursor, char** content);
+    Data** new_record(Table* target, char** content);
     // 레코드 삭제 함수 : 커서가 가리키고 있는 레코드를 삭제.
-    void delete_record(Cursor* cursor);
+    void delete_record(Table* target);
     // 데이터 수정 함수 : 커서가 가리키고 있는 특정 데이터의 값을 변경.
     // content : 기존 값을 대체할 문자열.
-    void edit_data(Cursor* cursor, char* content);
+    void edit_data(Table* target, char* content);
     // 데이터 전체 수정 함수 : 특정열에서 특정 값을 가진 모든 데이터를 변경.
     // col_name : 해당 함수를 적용할 열의 이름
     // before : 바뀌기 전 값.
     // content : 바꿀 값.
-    void edit_allData(Cursor* cursor, char* col_name, char* before, char* content);
+    void edit_allData(Table* target, char* col_name, char* before, char* content);
     // 데이터 정렬 함수.
     // col_name : 정렬기준이 될 열 이름 배열. 낮은 인덱스가 가장 우선시 됨.
     // direction : 정렬 방향. 1 : 오름차순, -1 : 내림차순
-    void sort_data(Cursor* cursor, char** col_name, int direction);
+    void sort_data(Table* target, char** col_name, int direction);
 
 
     // 개요 : 검색, 삽입, 삭제 등을 시행할 때 관측하고 있는 위치를 기록하는 구조체
@@ -158,17 +158,17 @@
     } Cursor;
 
     // 커서 생성 함수.
-    void new_cursor();
+    Cursor* new_cursor(Table* target);
     // 커서 제거 함수.
-    void delete_cursor();
+    void delete_cursor(Cursor* target);
     // 커서 이동 함수 : 지정한 열로 이동
     // col_name : 이동할 열의 이름
     Cursor* move_cursor_by_colName(Cursor* target, char* col_name);
     // 커서 이동 함수 : 열 이동.
-    // direction : 이동할 방향. 1 = 다음, -1 = 이전.
+    // direction : 이동할 방향. 1 : 다음, -1 : 이전. 0 : 첫 열로
     Cursor* move_cursor_col(Cursor* target, int direction);
     // 커서 이동 함수 : 행(레코드) 이동
-    // direction : 이동할 방향. 1 = 다음, -1 = 이전.
+    // direction : 이동할 방향. 1 : 다음, -1 : 이전. 0 : 헤더로
     Cursor* move_cursor_record(Cursor* target, int direction);
     // 커서 이동 함수 : 첫번째 행, 헤더 레코드로 이동.
     Cursor* move_cursor_default(Cursor* target);
