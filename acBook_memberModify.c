@@ -6,24 +6,22 @@ int modifyMain()
   char* id[MAXNUM];
   char* pw[MAXNUM];
 
-  while(1)
-  {
-    if(loginMain())
-      break;
-    else
-    {
-      printf("\n다시 하시겠습니까? (y/n) : \n");
-      if(select(getch()))
-      {
-        system("cls");
-        continue;
-      }
-      else
-       return 0;
-    }
-  }
+  willModify();
+
 
   return 0;
+}
+
+//
+void willModify()
+{
+  if(login_status)
+    printf("\n로그인 되어있습니다!\n");
+  else
+  {
+    printf("\n로그인 되어있지 않습니다!\n");
+    loginSys();
+  }
 }
 
 //Y or N 선택 함수

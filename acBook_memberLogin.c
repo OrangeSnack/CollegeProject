@@ -15,18 +15,26 @@ int loginMain()
   printf("\n");
 
   //DB에 ID,PW 전송
-  idOut(id);
-  pwOut(pw);
-
-  //로그인 성공여부
-  int check = /* loginCheck(id,pw) */;
-
-  if(check == TRUE)
-    printf("로그인 성공!!\n");
-  else
-    printf("로그인 실패..\n");
+  loginCheck(id, pw);
 
   return 0;
+}
+
+//로그인 성공여부 출력
+int loginCheck(char *id, char *pw)
+{
+  int boolean = login(id,pw);
+
+  if(boolean ==TRUE);
+  {
+    printf("\n 로그인 성공! \n");
+    strcpy(logined_id, id);
+    strcpy(logined_pw, pw);
+  }
+  else if(boolean == FALSE)
+    printf("\n 로그인 실패! \n");
+
+    return 0;
 }
 
 //로그인 입력부 출력
