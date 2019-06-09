@@ -17,6 +17,7 @@
 #ifndef acBook_operationTable
     #define acBook_operationTable
 
+    #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
 
@@ -172,5 +173,10 @@
     Cursor* move_cursor_record(Cursor* target, int direction);
     // 커서 이동 함수 : 첫번째 행, 헤더 레코드로 이동.
     Cursor* move_cursor_default(Cursor* target);
+
+    // 파일 -> 테이블 변환 함수.
+    Table* convert_file_to_table(char* name, Table_list* table_list);
+    // 테이블 -> 파일 변환 함수.
+    int convert_table_to_file(Table* target);
 
 #endif
