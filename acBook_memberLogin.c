@@ -30,9 +30,13 @@ int loginCheck(char *id, char *pw)
     printf("\n 로그인 성공! \n");
     strcpy(logined_id, id);
     strcpy(logined_pw, pw);
+    login_status = TRUE;
   }
   else if(boolean == FALSE)
+  {
     printf("\n 로그인 실패! \n");
+    login_status = FALSE
+  }
 
     return 0;
 }
