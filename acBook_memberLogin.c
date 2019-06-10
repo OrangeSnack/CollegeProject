@@ -1,5 +1,9 @@
 #include "acBook_memberLogin.h"
 
+extern int logined_id;
+extern int logined_pw;
+
+
 //로그인 메인함수
 int loginMain()
 {

@@ -1,5 +1,6 @@
 #include "acBook_memberRegister.h"
 
+
 //회원가입 메인함수
 int registerMain()
 {
@@ -10,18 +11,12 @@ int registerMain()
   printf("ID : ");
   inputSys(0, id);
 
-  idCheck(id);
-
-  //ID DB에 전송
-  idOut(id);
-
   printf("\n");
 
   printf("PW : ");
   inputSys(0, pw);
 
-  //PW DB에 전송
-  pwOut(pw);
+  registeration(id, pw);
 
   printf("\n\n회원가입이 완료되었습니다!\n");
 

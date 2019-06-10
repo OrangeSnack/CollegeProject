@@ -1,5 +1,7 @@
 #include "acBook_memberModify.h"
 
+extern int login_status;
+
 //메인 함수
 int modifyMain()
 {
