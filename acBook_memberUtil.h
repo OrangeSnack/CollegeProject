@@ -5,12 +5,13 @@
     로그인
     회원가입
 */
-#ifndeacBook_memberUtil
+#ifndef acBook_memberUtil
     #define acBook_memberUtil
 
 #define MAXNUM 20
 
 #include "acBook_util.h"
+#include "acBook_orderConverter.h"
 /* #include <logindb.h> //회원정보 DB 헤더 */
 
 //ID DB에 출력해주는 함수
