@@ -530,3 +530,142 @@ int get_index_by_name(Table* target, char* name) {
     return index;
 
 }
+
+Table* convert_file_to_table(char* name, Table_list* table_list) {
+    // 파일 객체 동적 생성
+    FILE* fp;
+    char* url;
+    sprintf(url, "%s%s%s", "data\\", name, ".txt");
+    fp = fopen(url, "r");       // 읽기 모드로 파일 오픈
+    // 파일이 존재하는지 확인.
+    if (fp == NULL) {
+        show_error_message("read_file()", 404);
+        return NULL;
+    }
+
+    // 파일이 적합한 양식으로 구성되었는지 확인 및 대입.
+    char* temp;
+    // 파일의 메타 데이터
+    // 0 : 테이블의 이름
+    // 1 : 파일의 최신 수정 일자. 사용 안함
+    // 2 : 열 갯수
+    // 3 : 행(레코드) 갯수
+    // 4 : 열 목록
+    // 5 : 행 목록. 사용안함.
+    char* meta_data[6]; 
+    char* compare_text[6] = {
+        "name : ",
+        "date : ", 
+        "num_col : " , 
+        "num_record : ", 
+        "column : ",
+        "data : "
+    };
+    for (int i = 0; i < 6; i++) { 
+        fgets(temp, 10000, fp);
+        if (strncmp(temp, compare_text[i], strlen(compare_text[i])) != 0) {
+            show_error_message("convert_file_to_table()", 400);
+            fclose(fp);
+            return NULL;
+        }
+        else {
+            meta_data[i] = strtok(temp, compare_text[i]);
+        }
+    }
+
+    if (meta_data[0] != name) {
+        show_error_message("convert_file_to_table()", 400);
+        fclose(fp);
+    }
+
+    // 테이블 객체 동적 생성.
+    Table* table = new_table(meta_data[0], table_list);
+    
+    // 열 삽입
+    char** column_list = (char**) malloc(atoi(meta_data[2]) * sizeof(char*));
+
+    column_list[0] = strtok(meta_data[4], ", ");
+
+    for (int i = 1; i < atoi(meta_data[2]); i++) {
+        column_list[i] = strtok(NULL, ", ");
+    }
+
+    for (int i = 0; i < atoi(meta_data[2]); i++) {
+        new_col(table, column_list[i]);
+    }
+
+
+    // 레코드 삽입
+    while (fgets(temp, 10000, fp) != NULL) {
+        column_list[0] = strtok(temp, ", ");
+
+        for (int i = 1; i < atoi(meta_data[2]); i++) {
+            column_list[i] = strtok(NULL, ", ");
+        }
+
+        for (int i = 0; i < atoi(meta_data[2]); i++) {
+            new_record(table, column_list);
+        }
+    }
+
+    free(column_list);
+
+    // 파일 객체 삭제
+    fcloes(fp);
+
+    // 테이블 객체 반환
+    return table;
+}
+
+int convert_table_to_file(Table* target) {
+    FILE* fp;
+
+    char* url;
+    sprintf(url, "%s%s%S", "data\\", *(target->name), ".txt");
+    fp = fopen(url, "wt");
+    
+    fprintf(fp, "name : %s\n", *(target->name));
+    fprintf(fp, "date : %s\n", "not implement");
+    fprintf(fp, "num_col : %d\n", target->num_col);
+    fprintf(fp, "num_record : %d\n", target->num_record);
+    // 열 이름 입력 구역
+    char* temp_col = "";
+    move_cursor_default(target->cursor);
+    while(1) {
+        strcat(temp_col, target->cursor->pos_col->name);
+        if (target->cursor->pos_col->next != NULL) {
+            strcat(temp_col, ", ");
+            move_cursor_col(target->cursor, 1);
+        }
+        else
+            break;
+    }
+    fprintf(fp, "column : %s\n", temp_col);
+
+    // 레코드 입력 구역
+    fprintf(fp, "data : \n");
+    char* temp_record;
+    while(1) {
+        temp_record = "";
+        for (int i = 0; i < target->num_col; i++) {
+            strcat(temp_record, target->cursor->pos_record[i]->content);
+            if (i < target->num_col - 1) {
+                strcat(temp_col, ", ");
+            }
+            else {
+                strcat(temp_col, "\n");
+            }
+        }
+        fprintf(fp, "%s", temp_record);
+        if (target->cursor->pos_record[0]->next != NULL) {
+            move_cursor_record(target->cursor, 1);
+        }
+        else {
+            break;
+        }
+    }
+
+    fclose(fp);
+}
+
+    
