@@ -36,7 +36,7 @@ void mainSelection(int selection)
       break;
 
     case 3:
-      exit();
+      exit(1);
       break;
 
     default:
@@ -50,6 +50,8 @@ void mainSelection(int selection)
 //로그인 메뉴
 int loginMenu(void)
 {
+  int selection = 0;
+
   printf("----------------------------------------------------------------\n");
   printf("\n");
   printf("\t\t\t로그인 메뉴\n");
@@ -62,4 +64,37 @@ int loginMenu(void)
   printf("\t 4.돌아가기\n");
 
   selection = selectUi(0,5,4);
+
+  return selection;
+}
+
+//로그인 선택 링크 함수
+void loginSelection(int selection)
+{
+  switch (selection) {
+    case 1:
+      system("cls");
+      loginMain();
+      break;
+
+    case 2:
+      system("cls");
+      registerMain();
+      break;
+
+    case 3:
+      system("cls");
+      modifyMain();
+      break;
+
+    case 4:
+      system("cls");
+      mainMenu();
+
+    default:
+      system("cls");
+      printf("\n알수없는 오류로 다시 시작합니다\n");
+      system("pause");
+      mainMenu();
+  }
 }

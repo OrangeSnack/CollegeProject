@@ -5,8 +5,8 @@ extern int login_status;
 //메인 함수
 int modifyMain()
 {
-  char* id[MAXNUM];
-  char* pw[MAXNUM];
+  char id[MAXNUM];
+  char pw[MAXNUM];
 
   willModify();
 
@@ -14,7 +14,7 @@ int modifyMain()
   {
     printf("\n아이디 변경 : ");
     inputSys(0, id);
-    printf("\n비밀번호 변경 : ")
+    printf("\n비밀번호 변경 : ");
     inputSys(0, pw);
 
     modify(id, pw);
@@ -34,10 +34,11 @@ void willModify()
   else
   {
     printf("\n로그인 되어있지 않습니다!\n");
-    loginSys();
+    loginMain();
   }
 }
 
+/*
 //Y or N 선택 함수
 int select(const char ch)
 {
@@ -54,3 +55,4 @@ int select(const char ch)
       return 0;
   }
 }
+*/

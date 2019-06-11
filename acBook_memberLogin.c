@@ -1,8 +1,8 @@
 #include "acBook_memberLogin.h"
 
-extern int logined_id;
-extern int logined_pw;
-
+extern char logined_id[MAXNUM];
+extern char logined_pw[MAXNUM];
+extern int login_status;
 
 //로그인 메인함수
 int loginMain()
@@ -29,7 +29,7 @@ int loginCheck(char *id, char *pw)
 {
   int boolean = login(id,pw);
 
-  if(boolean ==TRUE);
+  if(boolean ==TRUE)
   {
     printf("\n 로그인 성공! \n");
     strcpy(logined_id, id);
@@ -39,7 +39,7 @@ int loginCheck(char *id, char *pw)
   else if(boolean == FALSE)
   {
     printf("\n 로그인 실패! \n");
-    login_status = FALSE
+    login_status = FALSE;
   }
 
     return 0;

@@ -5,13 +5,19 @@
 #include "acBook_memberUtil.h"
 #include "acBook_memberLogin.h"
 
-//메인 함수
-int modifyMain();
+/*
+//Y or N 선택 함수
+int select(const char ch);
+*/
 
 //
 void willModify();
 
-//Y or N 선택 함수
-int select(const char ch);
+//메인 함수
+int modifyMain();
+
+
+
+
 
 #endif
