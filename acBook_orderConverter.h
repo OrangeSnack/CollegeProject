@@ -10,6 +10,7 @@
     #define acBook_orderConverter
 
     #include <stdlib.h>
+    #include <string.h>
 
     // 테이블 기초 함수.
     #include "acBook_operationTable.h"
@@ -37,6 +38,6 @@
     } Order_queue;    
 
     // 조작 명령을 받아 테이블 연산을 실행해 반환.
-    Table_list* table_manager(Order_queue* order);
+    Table_list* table_manager(Order_queue* order, int repeat_check);
 
 #endif

@@ -74,6 +74,9 @@ Table* operator_in (Table* target, Table* condition, Table_list** total_list) {
         edit_data(temp_table, temp);
     }
 
+    // 해당 테이블의 정보를 반환 리스트에 올림.
+    set_table_return(temp_table, total_list[2]);
+
     // 임시로 동적할당한 객체들 전부 제거.
     free(num_element);
 
