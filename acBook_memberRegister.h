@@ -16,6 +16,6 @@
 int registerMain();
 
 //아이디 중복 확인 함수
-void idCheck(char *id);
+//void idCheck(char *id);
 
 #endif

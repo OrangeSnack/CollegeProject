@@ -21,29 +21,55 @@ char* pwOut(char *pw)
 }
 */
 
+//////양희찬//////
+
 //수정 명령
-Table_list* modify(char* id, char* pw) {
+int modify(char* id, char* pw) {
     char temp[30] = {0, };
 
     sprintf(temp, "%s%s%s%s%s%s", "modify ", "(", logined_id, ", ", id, ", ", logined_pw, ", ", pw, ")");
 
-    return order_manager(temp);
+    order_manager(temp);
+
+    return modifyBool();
 }
 
 //가입 명령
-Table_list* registeration(char* id, char* pw) {
+int registeration(char* id, char* pw) {
     char temp[30] = {0, };
 
     sprintf(temp, "%s%s%s%s%s%s", "register ", "(", id, ", ", pw, ")");
 
-    return order_manager(temp);
+    order_manager(temp);
+
+    return registerationBool();
 }
 
 //로그인 명령
-Table_list* login(char* id, char* pw) {
+int login(char* id, char* pw) {
     char temp[30] = {0, };
 
     sprintf(temp, "%s%s%s%s%s%s", "login ", "(", id, ", ", pw, ")");
 
-    return order_manager(temp);
+    order_manager(temp);
+
+    return loginBool();
+}
+
+//로그인 명령 성공여부 분석해서 TRUE, FALSE 반환해주는 함수
+int loginBool()
+{
+  return TRUE;
+}
+
+//회원가입 명령 성공여부 분석해서 TRUE, FALSE 반환해주는 함수
+int registerationBool()
+{
+  return TRUE;
+}
+
+//회원정보수정명령 성공여부 분석해서 TRUE, FALSE 반환해주는 함수
+int modifyBool()
+{
+  return TRUE;
 }

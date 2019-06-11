@@ -16,9 +16,10 @@ int registerMain()
   printf("PW : ");
   inputSys(0, pw);
 
-  registeration(id, pw);
-
-  printf("\n\n회원가입이 완료되었습니다!\n");
+  if(registeration(id, pw))
+    printf("\n\n회원가입이 완료되었습니다!\n");
+  else
+    printf("\n\n오류! 회원가입이 되지 않았습니다!\n");
 
   return 0;
 }

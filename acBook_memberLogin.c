@@ -7,6 +7,8 @@ extern int login_status;
 //로그인 메인함수
 int loginMain()
 {
+  int boolean = FALSE;
+
   char id[MAXNUM] = {'\0'};
   char pw[MAXNUM] = {'\0'};
 
@@ -19,17 +21,19 @@ int loginMain()
   printf("\n");
 
   //DB에 ID,PW 전송
-  loginCheck(id, pw);
+  login(id,pw);
 
-  return 0;
+  boolean = loginCheck(id, pw);
+
+  return boolean;
 }
 
 //로그인 성공여부 출력
 int loginCheck(char *id, char *pw)
 {
-  int boolean = login(id,pw);
+  int boolean = login(id, pw);
 
-  if(boolean ==TRUE)
+  if(boolean == TRUE)
   {
     printf("\n 로그인 성공! \n");
     strcpy(logined_id, id);
@@ -42,7 +46,7 @@ int loginCheck(char *id, char *pw)
     login_status = FALSE;
   }
 
-    return 0;
+  retrun boolean;
 }
 
 //로그인 입력부 출력
