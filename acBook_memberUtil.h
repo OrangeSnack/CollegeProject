@@ -28,7 +28,7 @@ char* pwOut(char *pw);
 int modify(char* id, char* pw);
 
 //가입 명령
-int register(char* id, char* pw);
+int registeration(char* id, char* pw);
 
 //로그인 명령
 int login(char* id, char* pw);

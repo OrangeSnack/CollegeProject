@@ -1,5 +1,7 @@
 #include "acBook_mainMenu.h"
 
+extern int logined_id[MAXNUM];
+
 //첫 페이지
 int mainMenu(void)
 {
@@ -8,8 +10,9 @@ int mainMenu(void)
 	printf("----------------------------------------------------------------\n");
 	printf("\n");
 	printf("\t\t\t메인 메뉴\n");
+  printf("\t\t\t\t\t 현재계정 : %s", logined_id);
 
-	printf("\n\n");
+	printf("\n");
 
 	printf("\t 1.로그인\n");
 	printf("\t 2.가계부\n");
@@ -20,6 +23,7 @@ int mainMenu(void)
 	return selection;
 }
 
+/*
 //메인메뉴 선택 링크 함수
 void mainSelection(int selection)
 {
@@ -33,6 +37,8 @@ void mainSelection(int selection)
       system("cls");
       printf("\n아직 구현되지 않은 대상입니다\n");
       system("pause");
+      system("cls");
+      mainMenu();
       break;
 
     case 3:
@@ -43,9 +49,11 @@ void mainSelection(int selection)
       system("cls");
       printf("\n알수없는 오류로 다시 시작합니다\n");
       system("pause");
+      system("cls");
       mainMenu();
   }
 }
+*/
 
 //로그인 메뉴
 int loginMenu(void)
@@ -68,6 +76,7 @@ int loginMenu(void)
   return selection;
 }
 
+/*
 //로그인 선택 링크 함수
 void loginSelection(int selection)
 {
@@ -98,3 +107,4 @@ void loginSelection(int selection)
       mainMenu();
   }
 }
+*/

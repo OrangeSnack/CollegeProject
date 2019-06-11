@@ -14,8 +14,61 @@ int main() {
 
     int selection = 0;
 
-    selection = mainMenu();
-    mainSelection(selection);
+
+	   while(1)
+	    {
+		      system("cls");
+
+          while(1)
+    		{
+          selection = mainMenu();
+
+          if(selection == 1)
+          {
+            system("cls");
+            break;
+          }
+          else if(selection == 2)
+          {
+            system("cls");
+      			printf("\n구현안된 항목입니다..\n메인메뉴로 돌아갑니다\n");
+      			system("pause");
+      			system("cls");
+      			continue;
+          }
+          else
+            exit(1);
+          }
+
+          if(selection == 1)
+          {
+            selection = loginMenu();
+
+            if(selection == 1)
+            {
+              system("cls");
+              loginMain();
+            }
+
+			else if(selection == 2)
+			{
+				system("cls");
+				registerMain();
+			}
+
+			else if(selection == 3)
+			{
+				system("cls");
+				modifyMain();
+			}
+
+			else
+			{
+				system("cls");
+				continue;
+			}
+		}
+	}
 
     system("pause");
     return 0;

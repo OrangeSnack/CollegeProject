@@ -22,6 +22,7 @@ int modifyMain()
     if(modify(id, pw))
     {
       printf("\n변경이 완료되었습니다!\n");
+      strcpy(logined_id, id);
     }
     else
     {
@@ -42,6 +43,7 @@ void willModify()
   else
   {
     printf("\n로그인 되어있지 않습니다!\n");
+    system("pause");
     system("cls");
     loginMain();
   }

@@ -46,7 +46,7 @@ int loginCheck(char *id, char *pw)
     login_status = FALSE;
   }
 
-  retrun boolean;
+  return boolean;
 }
 
 //로그인 입력부 출력
