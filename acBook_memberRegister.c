@@ -1,5 +1,6 @@
 #include "acBook_memberRegister.h"
 
+
 //회원가입 메인함수
 int registerMain()
 {
@@ -10,31 +11,28 @@ int registerMain()
   printf("ID : ");
   inputSys(0, id);
 
-  idCheck(id);
-
-  //ID DB에 전송
-  idOut(id);
-
   printf("\n");
 
   printf("PW : ");
   inputSys(0, pw);
 
-  //PW DB에 전송
-  pwOut(pw);
-
-  printf("\n\n회원가입이 완료되었습니다!\n");
+  if(registeration(id, pw))
+    printf("\n\n회원가입이 완료되었습니다!\n\n");
+  else
+    printf("\n\n오류! 회원가입이 되지 않았습니다!\n\n");
 
   return 0;
 }
 
+/*
 //아이디 중복 확인 함수
 void idCheck(char *id)
 {
-  while(/*ID비교 결과 출력 함수*/ == TRUE)
+  while(ID비교 결과 출력 함수 == TRUE)
   {
     printf("\n같은ID가 존재합니다!!\n");
     printf("ID : ");
     inputSys(0, id);
   }
 }
+*/

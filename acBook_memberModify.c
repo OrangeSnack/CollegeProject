@@ -1,10 +1,14 @@
 #include "acBook_memberModify.h"
 
+extern int login_status;
+extern char logined_id[MAXNUM];
+extern char logined_pw[MAXNUM];
+
 //메인 함수
 int modifyMain()
 {
-  char* id[MAXNUM];
-  char* pw[MAXNUM];
+  char id[MAXNUM];
+  char pw[MAXNUM];
 
   willModify();
 
@@ -12,11 +16,18 @@ int modifyMain()
   {
     printf("\n아이디 변경 : ");
     inputSys(0, id);
-    printf("\n비밀번호 변경 : ")
+    printf("\n비밀번호 변경 : ");
     inputSys(0, pw);
 
-    modify(id, pw);
-    printf("\n변경이 완료되었습니다!\n");
+    if(modify(id, pw))
+    {
+      printf("\n변경이 완료되었습니다!\n");
+      strcpy(logined_id, id);
+    }
+    else
+    {
+      printf("\n변경에 실패하였습니다!\n");
+    }
   }
   else
     printf("\n 오류! 변경할 회원정보가 없습니다!\n");
@@ -32,10 +43,13 @@ void willModify()
   else
   {
     printf("\n로그인 되어있지 않습니다!\n");
-    loginSys();
+    system("pause");
+    system("cls");
+    loginMain();
   }
 }
 
+/*
 //Y or N 선택 함수
 int select(const char ch)
 {
@@ -52,3 +66,4 @@ int select(const char ch)
       return 0;
   }
 }
+*/

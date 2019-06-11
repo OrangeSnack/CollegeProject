@@ -14,18 +14,32 @@
 #include "acBook_orderConverter.h"
 /* #include <logindb.h> //회원정보 DB 헤더 */
 
+/*
 //ID DB에 출력해주는 함수
 char* idOut(char *id);
 
 //PW DB에 출력해주는 함수
 char* pwOut(char *pw);
+*/
+
+////양희찬
 
 //수정 명령
-Table_list* modify(char* id, char* pw);
+int modify(char* id, char* pw);
 
 //가입 명령
-Table_list* register(char* id, char* pw);
+int registeration(char* id, char* pw);
 
 //로그인 명령
-Table_list* login(char* id, char* pw);
+int login(char* id, char* pw);
+
+//로그인 명령 성공여부 분석해서 TRUE, FALSE 반환해주는 함수
+int loginBool();
+
+//회원가입 명령 성공여부 분석해서 TRUE, FALSE 반환해주는 함수
+int registerationBool();
+
+//회원정보수정명령 성공여부 분석해서 TRUE, FALSE 반환해주는 함수
+int modifyBool();
+
 #endif
