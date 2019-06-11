@@ -17,14 +17,16 @@
 #ifndef acBook_processingData
     #define acBook_processingData
 
-    // #include "acBook_operationTable.h"
+    #include "acBook_operationTable.h"
+    
 
     // 모든 조건 테이블은 자동으로 삭제됨.
     // 통계 관련 함수는 새로운 테이블을 생성해 반환함.
     // 정렬, 필터링 등의 함수는 타겟 테이블을 수정해 반환함.
 
-    // 'target'에 'parameter'와 'col', 'data'가 일치하는 값이 있는지 확인.
-    // 일치하면 'target'에서 해당 레코드를 전부 복사해서 반환.
-    Table* operator_in (Table* target,Table* condition);
+    // 자료 비교 함수.
+    // target : 비교 작업을 진행할 대상 테이블
+    // condition : 비교 작업을 수행할 조건 테이블    
+    Table* operator_in (Table* target, Table* condition, Table_list** total_list);
 
 #endif

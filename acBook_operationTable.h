@@ -21,10 +21,8 @@
     #include <stdlib.h>
     #include <string.h>
 
-    #include "acBook_processingData.h"      // 테이블 연산 파일
     #include "acBook_error.h"               // 에러 처리 파일
 
-    typedef struct _Order_queue Order_queue;
     typedef struct _Table_list Table_list;
     typedef struct _Table Table;
     typedef struct _Col Col;
@@ -37,32 +35,31 @@
     // - int num;
     // - int max_size;
     typedef struct _Table_list {
-        char** name;            // 테이블의 이름.
-        Table** address;        // 테이블의 주소
+        char** name;            // 테이블의 이름. Table.name
+        Table** address;        // 테이블의 주소. &Table.
         int num;                // 해당 구조체에 포함되는 테이블의 갯수.
         int max_size;           // 최대로 담을 수 있는 공간의 크기. 동적배열에 이용.
     } Table_list;
 
     // 개요 : 테이블 구조체
-    // - char** name;    
-    // - Table** address; 
+    // - Table_list* table_list;
+    // - char* name;
     // - Col* start_col;
     // - int num_col;
     // - int num_record;
     // - Cursor* cursor;
     typedef struct _Table {
-        char** name;        // 테이블 리스트에 기록된 테이블 이름 위치
-        Table** address;    // 테이블 리스트에 기록된 테이블 주소 위치
+        Table_list* table_list;     // 해당 테이블이 속한 리스트 주소
+        char* name;         // 테이블의 이름
         Col* start_col;     // 시작열을 가리키는 포인터.
         int num_col;        // 열 갯수
         int num_record;     // 행 갯수.
         Cursor* cursor;     // 커서 포인터
     } Table;
-
-    // 조작 명령을 받아 테이블 연산을 실행해 반환.
-    Table_list* table_manager(Order_queue* order);
+    
     // 기타 부속함수.
     void table_list_default_setting(Table_list* target, int max_size);
+    // 테이블 리스트에서 해당 테이블의 
 
     // 테이블 생성 함수.
     // name : 생성할 테이블의 이름
@@ -73,15 +70,15 @@
     void delete_table(Table* target);
     // 임시 테이블로 변경
     // target : 변경시킬 테이블 주소
-    // main_list : 메인 테이블 리스트
     // temp_list : 임시 테이블 리스트 
-    void set_table_temp(Table* target, Table_list* main_list, Table_list* temp_list);
+    void set_table_temp(Table* target, Table_list* temp_list);
     // 메인 테이블로 변경
     // 임시 테이블 지정.
     // target : 변경시킬 테이블 주소
-    // main_list : 메인 테이블 리스트
-    // temp_list : 임시 테이블 리스트 
-    void set_table_main(Table* target, Table_list* main_list, Table_list* temp_list);
+    // main_list : 메인 테이블 리스트 
+    void set_table_main(Table* target, Table_list* main_list);
+    // 해당 테이블을 반환 리스트에 올리는 함수.
+    void set_table_return(Table* target, Table_list* return_list);
 
 
     // 개요 : 열 구조체
@@ -129,8 +126,9 @@
 
     // 레코드 생성 함수.
     // 생성 위치는, 커서의 다음.
-    // content : 레코드에 삽입될 문자열 배열
-    Data** new_record(Table* target, char** content);
+    // contents : 레코드에 삽입될 문자열 배열
+    // num_contents : 문자열 배열의 길이. 레코드 길이보다 크면 잘리고, 적으면 나머진 NULL로 입력됨.
+    Data** new_record(Table* target, char** contents, int num_contents);
     // 레코드 삭제 함수 : 커서가 가리키고 있는 레코드를 삭제.
     void delete_record(Table* target);
     // 데이터 수정 함수 : 커서가 가리키고 있는 특정 데이터의 값을 변경.
@@ -173,6 +171,19 @@
     Cursor* move_cursor_record(Cursor* target, int direction);
     // 커서 이동 함수 : 첫번째 행, 헤더 레코드로 이동.
     Cursor* move_cursor_default(Cursor* target);
+
+    // 현재 커서가 가리키는 열 인덱스를 반환하는 함수
+    int get_index_by_cursor(Table* target);
+    // 지정한 이름과 동일한 열 인덱스를 반환하는 함수
+    int get_index_by_name(Table* target, char* name);
+    // 해당 테이블이 자신의 테이블 리스트에 기록되어 있는 인덱스를 반환하는 함수.
+    int get_index_on_table_list (Table* target);
+    // 지정한 이름을 가진 테이블이 해당 테이블 리스트의 몇번 인덱스에 있는지 반환하는 함수.
+    int get_tableIndex_by_name (char* name, Table_list* table_list);
+    // 문자열을 입력받으면 해당 이름을 가진 테이블 리스트를 반환하는 함수.
+    // name : 찾고 싶은 테이블 리스트의 이름.
+    // total_list : 현재 존재하는 모든 테이블 리스트의 배열. 0 : 메인, 1 : 임시, 2 : 반환
+    Table_list* get_table_list_by_name(char* name, Table_list** total_list);
 
     // 파일 -> 테이블 변환 함수.
     Table* convert_file_to_table(char* name, Table_list* table_list);

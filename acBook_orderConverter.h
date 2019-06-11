@@ -11,8 +11,10 @@
 
     #include <stdlib.h>
 
-    // 테이블 연산 파일
+    // 테이블 기초 함수.
     #include "acBook_operationTable.h"
+    // 테이블 연산 함수.
+    #include "acBook_processingData.h"      
 
     typedef struct _Table Table;
 
@@ -21,13 +23,20 @@
     // 반환하는 테이블은 
     Table_list* order_manager(char* order_string);
 
+    enum order_input_type {START, END, ADD};
+
     // 문자열을 명령어 큐로 변환해주는 함수.
-    Order_queue* convert_str_to_order(Order_queue* order, char* order_string, int string_length);
+    Order_queue* convert_str_to_order(Order_queue* order, char* order_string, int string_length, enum order_input_type type);
 
     // 명령어를 해석해서 문자열 리스트 형으로 반환하기 위한 'queue'
+    // - char**  order;
+    // - Order_queue* next;
     typedef struct _Order_queue {
-        char**  order;      // 명령어 문자열. 동적할당. 'table_manager'에서 반환.
+        char*  order;       // 명령어 문자열. 동적할당. 'table_manager'에서 반환.
         Order_queue* next;  // 다음 명령을 가리키는 포인터.
-    } Order_queue;
+    } Order_queue;    
+
+    // 조작 명령을 받아 테이블 연산을 실행해 반환.
+    Table_list* table_manager(Order_queue* order);
 
 #endif
