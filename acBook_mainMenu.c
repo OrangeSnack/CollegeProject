@@ -12,7 +12,7 @@ int mainMenu(void)
 	printf("\t\t\t메인 메뉴\n");
   printf("\t\t\t\t\t 현재계정 : %s", logined_id);
 
-	printf("\n");
+	printf("\n\n");
 
 	printf("\t 1.로그인\n");
 	printf("\t 2.가계부\n");
@@ -63,6 +63,7 @@ int loginMenu(void)
   printf("----------------------------------------------------------------\n");
   printf("\n");
   printf("\t\t\t로그인 메뉴\n");
+  printf("\t\t\t\t\t 현재계정 : %s", logined_id);
 
   printf("\n\n");
 

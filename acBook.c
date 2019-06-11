@@ -48,18 +48,21 @@ int main() {
             {
               system("cls");
               loginMain();
+              system("pause");
             }
 
 			else if(selection == 2)
 			{
 				system("cls");
 				registerMain();
+        system("pause");
 			}
 
 			else if(selection == 3)
 			{
 				system("cls");
 				modifyMain();
+        system("pause");
 			}
 
 			else
