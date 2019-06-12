@@ -19,7 +19,7 @@ Table* operator_in (Table* target, Table* condition, Table_list** total_list) {
     }
     
     // 커서위치에 대한 인덱스를 받아옴.
-    int index = get_index_by_cursor(target->cursor);
+    int index = get_index_by_cursor(target);
 
     // 확인용 임시 int형 동적배열
     int* num_element = (int*) calloc(condition->num_record, sizeof(int));
@@ -59,15 +59,17 @@ Table* operator_in (Table* target, Table* condition, Table_list** total_list) {
     sprintf(temp_table_name, "%s_in_%d", condition->name, result_num);
     Table* temp_table = new_table(temp_table_name, total_list[1]);
     // 내용은 condition과 유사하나, 해당 요소가 얼마나 확인되었는지 체크하는 컬럼이 하나 더 추가됨.
+    char* temp_contents[1];
     new_col(temp_table, condition->cursor->pos_col->name);
     for (int i = 0; i < condition->num_record; i++) {
-        new_record(temp_table, condition->cursor->pos_record, 1);
+        temp_contents[0] = condition->cursor->pos_record[0]->content;
+        new_record(temp_table, temp_contents, 1);
     }
-    new_col(temp_table, "num");
+    new_col(temp_table, (char*)"num");
 
     // 임시 저장되었던 배열의 값을 전달.
     char* temp;
-    move_cursor_by_colName(temp_table->cursor, "num");
+    move_cursor_by_colName(temp_table->cursor, (char*)"num");
     for (int i = 0; i < temp_table->num_record; i++) {
         move_cursor_record(temp_table->cursor, 1);
         sprintf(temp, "%d", num_element[i]);

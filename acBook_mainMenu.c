@@ -16,9 +16,10 @@ int mainMenu(void)
 
 	printf("\t 1.로그인\n");
 	printf("\t 2.가계부\n");
-	printf("\t 3.종료\n");
+	printf("\t 3.개발자용\n");
+	printf("\t 4.종료\n");
 
-	selection = selectUi(0,5,3);
+	selection = selectUi(0,5,4);
 
 	return selection;
 }

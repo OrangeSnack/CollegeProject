@@ -1,5 +1,7 @@
 #include "acBook.h"
 
+void order_test();
+
 int main() {
     system("chcp 65001");
     system("cls");
@@ -15,64 +17,112 @@ int main() {
     int selection = 0;
 
 
-	   while(1)
-	    {
-		      system("cls");
+    while(1)
+    {
+        system("cls");
 
-          while(1)
-    		{
-          selection = mainMenu();
+        while(1)
+        {
+            selection = mainMenu();
 
-          if(selection == 1)
-          {
-            system("cls");
-            break;
-          }
-          else if(selection == 2)
-          {
-            system("cls");
-      			printf("\n구현안된 항목입니다..\n메인메뉴로 돌아갑니다\n");
-      			system("pause");
-      			system("cls");
-      			continue;
-          }
-          else
-            exit(1);
-          }
-
-          if(selection == 1)
-          {
-            selection = loginMenu();
-
-            if(selection == 1)
-            {
-              system("cls");
-              loginMain();
-              system("pause");
+            if(selection == 1) {
+                system("cls");
+                break;
+            }
+            else if(selection == 2) {
+                system("cls");
+                printf("\n구현안된 항목입니다..\n메인메뉴로 돌아갑니다\n");
+                system("pause");
+                system("cls");
+                continue;
+            }
+            else if (selection == 3) {
+                order_test();
+            }
+            else {
+                exit(1);
             }
 
-			else if(selection == 2)
-			{
-				system("cls");
-				registerMain();
-        system("pause");
-			}
+            if(selection == 1) {
+                selection = loginMenu();
 
-			else if(selection == 3)
-			{
-				system("cls");
-				modifyMain();
-        system("pause");
-			}
+                if(selection == 1) {
+                    system("cls");
+                    loginMain();
+                    system("pause");
+                }
 
-			else
-			{
-				system("cls");
-				continue;
-			}
-		}
+                else if(selection == 2) {
+                    system("cls");
+                    registerMain();
+                    system("pause");
+                }
+
+                else if(selection == 3) {
+                    system("cls");
+                    modifyMain();
+                    system("pause");
+                }
+
+                else {
+                    system("cls");
+                    continue;
+                }
+		    }
+        }
 	}
 
     system("pause");
     return 0;
+}
+
+void order_test() {
+    char* temp_string = (char*) calloc(1000, sizeof(char));
+    char temp_input[100];
+
+    system("cls");
+
+    Table_list* temp_list;
+
+    while(1) {
+        strcpy(temp_string, "");
+        while (1) {
+            fflush(stdin);
+            printf("테스트용 입력(; 입력시 종료) : ");
+            scanf("%[^\n]", temp_input);
+            if (temp_input[0] == ';')
+                break;
+            else 
+                strcat(temp_string, temp_input);
+        }
+        if (temp_string[0] == 'q')
+            break;
+        printf("%s\n", temp_string);
+
+        temp_list = order_manager(temp_string);
+        if (strcmp(temp_string, "test()") == 0) {
+
+            Table* temp_table = temp_list->address[1];
+            move_cursor_default(temp_table->cursor);
+
+            printf("테이블 시작\n");
+            printf("%s\n", temp_table->name);
+            for(int i = 0; i < temp_table->num_col; i++) {
+                printf("%s\t", temp_table->cursor->pos_col->name);
+                move_cursor_col(temp_table->cursor, 1);
+            }
+            printf("\n%s\n", "====================================");
+
+            for(int i = 0; i < temp_table->num_record; i++) {
+                move_cursor_record(temp_table->cursor, 1);
+                for (int j = 0; j < temp_table->num_col; j++) {
+                    printf("%s\t", temp_table->cursor->pos_record[j]->content);
+                }
+                printf("\n");
+            }
+            printf("테이블 끝\n");
+        }
+    }
+
+    free(temp_string);
 }

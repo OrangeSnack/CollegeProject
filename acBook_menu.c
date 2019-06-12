@@ -1,3 +1,4 @@
+/*
 #include <acbook.h>
 #include "stdio.h" 
 #include "conio.h" 
@@ -58,7 +59,7 @@ void getpassword(char parm_password[])
 
 void UserRegister()
 {
-	printf("ÀúÈñ ½Ã½ºÅÛ¿¡ È¸¿ø µî·ÏÇÏ½Ã·Á¸é ´ÙÀ½ Á¤º¸¸¦ ÀÔ·ÂÇÏ¼Å¾ß ÇÕ´Ï´Ù.\n\n");
+	printf("ï¿½ï¿½ï¿½ï¿½ ï¿½Ã½ï¿½ï¿½Û¿ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½Ï¼Å¾ï¿½ ï¿½Õ´Ï´ï¿½.\n\n");
 
 	printf("1. Input ID: ");
 	gets(g_user_data[g_user_count].id);
@@ -72,7 +73,7 @@ void UserRegister()
 	gets(g_user_data[g_user_count].registration_number);
 	g_user_count++;
 
-	printf("È¸¿øÀÌ µÇ½Å°É ÃàÇÏµå¸³´Ï´Ù.. \n\n");
+	printf("È¸ï¿½ï¿½ï¿½ï¿½ ï¿½Ç½Å°ï¿½ ï¿½ï¿½ï¿½Ïµå¸³ï¿½Ï´ï¿½.. \n\n");
 }
 
 main()
@@ -92,21 +93,21 @@ main()
 			if (!strcmp(g_user_data[index].id, id)) {
 				if (!strcmp(g_user_data[index].password, password)) {
 					success_login = 1;
-					printf("¼º°øÀûÀ¸·Î ·Î±×ÀÎ Çß½À´Ï´Ù. ^^; \n\n");
+					printf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ï¿½Ï´ï¿½. ^^; \n\n");
 				}
-				else printf("¾ÏÈ£°¡ Æ²·È½À´Ï´Ù. ¤Ñ¤Ñ! \n\n");
+				else printf("ï¿½ï¿½È£ï¿½ï¿½ Æ²ï¿½È½ï¿½ï¿½Ï´ï¿½. ï¿½Ñ¤ï¿½! \n\n");
 				break;
 			}
 		}
 
 		if (index == g_user_count) {
-			printf("´ÔÀÌ ÀÔ·ÂÇÏ½Å ID´Â µî·ÏÀÌ µÇ¾îÀÖÁö ¾Ê½À´Ï´Ù. µî·ÏÇÏ½Ã°Ú½À´Ï±î? ( y / n ): ");
+			printf("ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½Ï½ï¿½ IDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½. ï¿½ï¿½ï¿½ï¿½Ï½Ã°Ú½ï¿½ï¿½Ï±ï¿½? ( y / n ): ");
 			input = getche();
 			printf("\n\n");
 			if (input == 'y' || input == 'Y') UserRegister();
-			else printf("´Ù½Ã ÀÔ·ÂÇÏ¼¼¿ä...\n\n");
+			else printf("ï¿½Ù½ï¿½ ï¿½Ô·ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½...\n\n");
 		}
 	}
 
 	saveuserdata();
-}
+}*/

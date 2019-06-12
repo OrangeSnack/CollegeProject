@@ -1,0 +1,7 @@
+name : custom_function
+date : 19-06-11
+num_col : 2
+num_record : 1
+column : functiona_name|function_act
+data : 
+test| new_table(temp_table, main_table_list) new_col(temp_table, main_table_list, temp_col) new_record(temp_table, main_table_list, temp_data_1) new_record(temp_table, main_table_list, temp_data_2) new_record(temp_table, main_table_list, temp_data_3) new_record(temp_table, main_table_list, temp_data_4)set_table_return(temp_table, main_table_list)convert_table_to_file(temp_table, main_table_list)

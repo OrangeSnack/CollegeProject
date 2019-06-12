@@ -18,6 +18,6 @@
     - 501 : 구현되지 않음(해당 기능이 아직 구현되지 않음)
     - 507 : 용량 부족(생성함수 등을 수행할 때 필요한 여유 용량이 부족함)
     */
-    void show_error_message(char* target, int error_code);
+    void show_error_message(const char* target, int error_code);
 
 #endif
