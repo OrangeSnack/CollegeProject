@@ -166,6 +166,8 @@
     // 커서 이동 함수 : 열 이동.
     // direction : 이동할 방향. 1 : 다음, -1 : 이전. 0 : 첫 열로
     Cursor* move_cursor_col(Cursor* target, int direction);
+    // 커서 이동 함수 : 대상 데이터가 있는 열로 이동
+    Cursor* move_cursor_record_by_data(Cursor* target, char* col_name, char* data);
     // 커서 이동 함수 : 행(레코드) 이동
     // direction : 이동할 방향. 1 : 다음, -1 : 이전. 0 : 헤더로
     Cursor* move_cursor_record(Cursor* target, int direction);

@@ -1,8 +1,10 @@
 #include "acBook_orderConverter.h"
 
-Table_list* order_manager(char* order_string) {
+Table_list* order_manager(char* _order_string) {
     // 임시용 테이블 리스트 포인터
     Table_list* temp_list;
+    char* order_string = (char*) malloc(1500 * sizeof(char));
+    strcpy(order_string, _order_string);
 
     char temp[1000] = {0, };    // 문자열의 일부를 잘라 전달하기 위한 임시 문자 배열
     int i = 0;
@@ -93,7 +95,8 @@ Table_list* order_manager(char* order_string) {
             tag = 0;
         }
     }
-    free(order_head);
+    free(order_string);
+    free(order);
 
     return temp_list;
 }
@@ -108,8 +111,10 @@ Order_queue* convert_str_to_order(Order_queue* old_order, char* order_string, in
         // 새로운 객체에 연결
         if (old_order->next != NULL)
             new_order->next = old_order->next;
-        else
+        else {
+            new_order->order = NULL;
             new_order->next = NULL;
+        }
         old_order->next = new_order;
     
         old_order->order = (char*) malloc(sizeof(char) * string_length + 1);
@@ -191,7 +196,8 @@ Table_list* table_manager(Order_queue** order, int repeat_check) {
     // 명령 수행부.
     order_processor(order, &main_table_list, &temp_table_list, &return_table_list);
     
-
+    // 1회 이상 실행됨을 체크
+    check_first_call = 1;
     return &return_table_list;
 }
 
@@ -282,6 +288,7 @@ char* read_order_line(Order_queue** order_pointer) {
 
     // 해당 queue 반환.
     Order_queue* temp_order = (*order_pointer)->next;
+    free((*order_pointer)->order);
     free((*order_pointer));
     (*order_pointer) = temp_order;
 
@@ -316,6 +323,7 @@ int call_function(char* function_name, char** parameters, Table_list** total_lis
         strcmp(function_name, "edit_allData") == 0 ||
         strcmp(function_name, "sort_data") == 0 ||
         strcmp(function_name, "move_cursor_by_colName") == 0 ||
+        strcmp(function_name, "move_cursor_record_by_data") == 0 ||
         strcmp(function_name, "move_cursor_col") == 0 ||
         strcmp(function_name, "move_cursor_record") == 0 ||
         strcmp(function_name, "move_cursor_default") == 0 ||
@@ -400,6 +408,11 @@ int call_function(char* function_name, char** parameters, Table_list** total_lis
                 temp_direction = -1;
             move_cursor_col(temp_table->cursor, temp_direction);
         }
+        // 데이터를 이용한 커서 이동.
+        // 인수 : 테이블 이름, 테이블 리스트 이름, 데이터, 데이터가 포함된 열 이름.
+        else if (strcmp(function_name, "move_cursor_record_by_data") == 0) {
+            move_cursor_record_by_data(temp_table->cursor, parameters[3], parameters[2]);
+        }
         else if (strcmp(function_name, "move_cursor_record") == 0) {
             int temp_direction;
             if (strcmp(parameters[2], "1") == 0)
@@ -441,22 +454,52 @@ int call_function(char* function_name, char** parameters, Table_list** total_lis
         Table* function_table = total_list[0]->address[function_table_index];
         move_cursor_default(function_table->cursor);
 
-        // 값 전달용 한칸짜리 char*형 배열.
+        // 값 전달용 한칸짜리 2차원 배열.
         char* temp_string[1];
+        temp_string[0] = (char*) calloc(300, sizeof(char));
+        char temp_parameter_check[4];
 
-        int i;
+        int index;
         // custom_table에서 해당 함수 명을 검색하여, 존재하면 다음열의 데이터를 additional_order 테이블에 옯겨적음.
         // additional_order 테이블의 열 추가.
         new_col(total_list[0]->address[0], (char*)"order");
-        for (i = 0; i < function_table->num_record; i++) {
+        for (index = 0; index < function_table->num_record; index++) {
+            // 동일한 이름을 가진 함수가 있는지 순회 확인
             move_cursor_record(function_table->cursor, 1);
+            // 포착시
             if (strcmp(function_table->cursor->pos_record[0]->content, function_name) == 0) {
-                temp_string[0] = function_table->cursor->pos_record[1]->content;
-                new_record(total_list[0]->address[0], temp_string, 1);
+                // 해당 문자열을 additional_order 테이블에 추가.
+                for (int i = 0, j = 0;  ; i++, j++) {
+                    // 만약 $으로 시작하는 문자를 보았을 경우.
+                    if (function_table->cursor->pos_record[1]->content[i] == '$') {
+                        for (int k = 0; k < 9; k++) {
+                            // 그에 적절한 매개변수를 대입해서 반영하고, 명령 문자열 추가.
+                            if (function_table->cursor->pos_record[1]->content[i+1] == k + 48 + 1) {
+                                strcat(temp_string[0], parameters[k]);
+                                // printf("%s\n", temp_string[0]);
+                                new_record(total_list[0]->address[0], temp_string, 1);
+                                i += 1;
+                                j = -1;
+                            }
+                        }
+                    }
+                    // 만약 끝까지 검색이 완료된 경우에는 지금까지 기록된걸 전부 전달하고, 루프 중료.
+                    else if (function_table->cursor->pos_record[1]->content[i] == '\0') {
+                        // printf("%s\n", temp_string[0]);
+                        new_record(total_list[0]->address[0], temp_string, 1);
+                        break;
+                    }
+                    // 그 외에는 한칸씩 전진하면서 문자열을 복사.
+                    else {
+                        temp_string[0][j] = function_table->cursor->pos_record[1]->content[i];
+                        temp_string[0][j+1] = '\0';
+                    }
+                }                
                 break;
-            }
+            }            
         }
-        if (i == function_table->num_record) {
+        free(temp_string[0]);
+        if (index == function_table->num_record) {
             show_error_message("call_function()", 400);
             return 2;
         }

@@ -1,10 +1,11 @@
 #include "acBook_mainMenu.h"
 
-extern int logined_id[MAXNUM];
+extern char logined_id[MAXNUM];
 
 //첫 페이지
 int mainMenu(void)
 {
+  system("cls");
   int selection = 0;
 
 	printf("----------------------------------------------------------------\n");
@@ -16,7 +17,7 @@ int mainMenu(void)
 
 	printf("\t 1.로그인\n");
 	printf("\t 2.가계부\n");
-	printf("\t 3.개발자용\n");
+	printf("\t 3.개발용\n");
 	printf("\t 4.종료\n");
 
 	selection = selectUi(0,5,4);
@@ -59,6 +60,7 @@ void mainSelection(int selection)
 //로그인 메뉴
 int loginMenu(void)
 {
+  system("cls");
   int selection = 0;
 
   printf("----------------------------------------------------------------\n");

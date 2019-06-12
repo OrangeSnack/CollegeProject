@@ -1,0 +1,15 @@
+name : memberDB
+date : not implement
+num_col : 2
+num_record : 9
+column : id|pw
+data : 
+dfer|jkui
+aaa|bbb
+test|test
+777|888
+scott|tiger
+tempID|tempPW
+123|456
+가나다라|마바사
+abc|efg

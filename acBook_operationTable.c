@@ -221,10 +221,12 @@ Col* new_col(Table* target, char* name) {
         free(target->cursor->pos_record);
     target->cursor->pos_record = (Data**) malloc(target->num_col * sizeof(Data*));
     // 커서 초기화
-    if (target->cursor->pos_col != NULL)
+    if (target->cursor->pos_col != NULL) {
         move_cursor_col(target->cursor, 1);
-    else 
+    }
+    else {
         target->cursor->pos_col = target->start_col;
+    }
     move_cursor_record(target->cursor, 0);
 
     // 커서를 이용해 Table 구조체에 접근해서 현재 레코드 갯수만큼 더미 데이터 라인 생성
@@ -254,14 +256,20 @@ void delete_col(Table* target) {
     int index = 0;
     index = get_index_by_cursor(target);
 
-
-    // 첫 레코드로 이동
-    move_cursor_record(target->cursor, 0);
-    move_cursor_record(target->cursor, 1);
     
     // 해당 col에 데이터가 완전히 제거될 때까지 데이터를 삭제.
-    while(target->cursor->pos_col->start_data->next != NULL) {
-        delete_record(target);
+    while(target->cursor->pos_col->start_data->next != NULL) {        
+        move_cursor_record(target->cursor, 0);
+        move_cursor_record(target->cursor, 1);
+        if (target->cursor->pos_record[index]->next != NULL) {
+            target->cursor->pos_record[index]->next->prev = target->cursor->pos_record[index]->prev;
+            target->cursor->pos_record[index]->prev->next = target->cursor->pos_record[index]->next;
+        }
+        else {
+            target->cursor->pos_record[index]->prev->next = NULL;
+        }
+        free(target->cursor->pos_record[index]->content);
+        free(target->cursor->pos_record[index]);
     }
 
     // 헤더 데이터를 삭제
@@ -269,9 +277,13 @@ void delete_col(Table* target) {
     free(target->cursor->pos_col->start_data);
 
     // target_col 객체 앞 뒤 노드 연결
-    target->cursor->pos_col->prev->next = target->cursor->pos_col->next;
-    if (target->cursor->pos_col->next != NULL)
+    if (target->cursor->pos_col->prev != NULL)
+        target->cursor->pos_col->prev->next = target->cursor->pos_col->next;
+    if (target->cursor->pos_col->next != NULL) {
         target->cursor->pos_col->next->prev = target->cursor->pos_col->prev;
+        if (target->cursor->pos_col == target->start_col)
+            target->start_col = target->cursor->pos_col->next;
+    }
 
     // 임시 커서 객체에 해당 col 정보를 저장하고, 원본은 다른 col으로 이동.
     cursor->pos_col = target->cursor->pos_col;
@@ -370,9 +382,9 @@ Data** new_record(Table* target, char** contents, int num_contents) {
         data_arr[i]->prev = target->cursor->pos_record[i];
         data_arr[i]->next = target->cursor->pos_record[i]->next;
         // 기존 위치에 있던 데이터의 링크를 새롭게 만든 데이터에 연결
-        target->cursor->pos_record[i]->next = data_arr[i];
         if (target->cursor->pos_record[i]->next != NULL)
             target->cursor->pos_record[i]->next->prev = data_arr[i];
+        target->cursor->pos_record[i]->next = data_arr[i];
         // 데이터 삽입
         if ((i + 1) <= num_contents) {
             data_arr[i]->content = (char*) malloc((strlen(contents[i]) + 1) * sizeof(char));
@@ -427,6 +439,7 @@ void delete_record(Table* target) {
         // 임시로 받아놨던 대상 위치의 데이터 포인터로 초기화.
         target->cursor->pos_record[i] = cursor->pos_record[i];
     }
+    target->num_record -= 1;
 
     // 임시 커서 객체 제거
     free(cursor);
@@ -437,7 +450,9 @@ void edit_data(Table* target, char* content) {
     int index = get_index_by_cursor(target);
 
     // 공간 재할당 및 복사
-    realloc(target->cursor->pos_record[index]->content, (strlen(content) + 1) * sizeof(char));
+    if (target->cursor->pos_record[index]->content != NULL)
+        free(target->cursor->pos_record[index]->content);
+    target->cursor->pos_record[index]->content = (char*) malloc((strlen(content) + 1) * sizeof(char));
     strcpy(target->cursor->pos_record[index]->content, content);
 }
 
@@ -456,7 +471,7 @@ void edit_allData(Table* target, char* col_name, char* before_text, char* conten
 
     while(target->cursor->pos_record[index] != NULL) {
         // 각 데이터 라인을 순회하며, 대상 데이터가 확인되면, 새로운 데이터로 교체.
-        if (strcmp(target->cursor->pos_record[index]->content, before_text)) {
+        if (strcmp(target->cursor->pos_record[index]->content, before_text) == 0) {
             realloc(target->cursor->pos_record[index]->content, (strlen(content) + 1) * sizeof(char));
             strcpy(target->cursor->pos_record[index]->content, content);
         }
@@ -508,7 +523,7 @@ Cursor* move_cursor_by_colName(Cursor* target, char* col_name) {
     int index = 0;
     // 이름이 일치할 때 까지 확인
     while(index < target->pos_table->num_col) {
-        if (strcmp(target->pos_col->name, col_name))
+        if (strcmp(target->pos_col->name, col_name) == 0)
             return target;
         else {
             move_cursor_col(target, 1);
@@ -549,6 +564,39 @@ Cursor* move_cursor_col(Cursor* target, int direction) {
     }
 
     return target;
+}
+
+Cursor* move_cursor_record_by_data(Cursor* target, char* col_name, char* data) {
+    // 커서 포인터 정보중 하나라도 NULL 인지 확인.
+    if (target == NULL ||
+        target->pos_table == NULL ||
+        target->pos_col == NULL ||
+        target->pos_record == NULL) {
+            show_error_message("move_cursor_record_by_data()", 400);
+            return NULL;
+    }
+
+    // 열 이름으로 커서 이동이 이상없이 된 경우.
+    if(move_cursor_by_colName(target, col_name) != NULL) {
+        // 커서로 열 번호를 받아옴.
+        int index = get_index_by_cursor(target->pos_table);
+        // 레코드 커서를 처음으로 이동시킴.
+        move_cursor_record(target, 0);
+        // 한 칸씩 레코드 커서를 움직이며 일치하는 데이터가 있는지 확인.
+        for(int i = 0; i < target->pos_table->num_record; i++) {
+            move_cursor_record(target, 1);
+            // 일치하면 해당 위치에서 함수를 종료.
+            if (strcmp(target->pos_record[index]->content, data) == 0) {
+                return target;
+            }
+        }
+        // 일치하지 않으면 다시 초기화 시키고 NULL 반환.
+        show_error_message("move_cursor_record_by_data()", 404);
+        move_cursor_record(target, 0);        
+        return NULL;
+    }
+    // 아예 해당되는 열 이름이 없는 경우 NULL 반환.
+    return NULL;
 }
 
 Cursor* move_cursor_record(Cursor* target, int direction) {
@@ -717,12 +765,22 @@ Table_list* get_table_list_by_name(char* name, Table_list** total_list) {
 }
 
 Table* convert_file_to_table(char* name, Table_list* table_list) {
+    // 이미 불러온 파일인지 검사.
+    for (int i = 0; i < table_list->max_size; i++) {
+        if (table_list->name[i] == NULL)
+            continue;
+        else if (strcmp(table_list->name[i], name) == 0) {
+            show_error_message("convert_file_to_table()", 409);
+            return NULL;
+        }
+    }
+
     // 파일 객체 동적 생성
     FILE* fp;
     char* url = (char*) malloc(100 * sizeof(char));
     // 작업 환경에서만 필요한 코드. 다른 곳에서 단독으로 실행할 땐 아래 주석 코드로 대체
     sprintf(url, "%s%s%s", "homeworks\\CollegeProject\\data\\", name, ".txt");
-    // sprintf(url, "%s%s%s", "data\\", name, ".txt");
+    // sprintf(url, "data\\%s.txt", name);
     fp = fopen(url, "r");       // 읽기 모드로 파일 오픈
     // 파일이 존재하는지 확인. 없으면 예외처리
     if (fp == NULL) {
@@ -799,19 +857,23 @@ Table* convert_file_to_table(char* name, Table_list* table_list) {
     }
 
     // 레코드 삽입
+    for (int i = 0; i < atoi(meta_data[2]); i++) {
+        realloc(column_list[i], 250 * sizeof(char));
+    }
 
     // 파일의 끝에 도달할 때 까지
     while (fgets(temp, 10000, fp) != NULL) {
+
         // 위에서 사용한 리스트 재활용.
         // 위와 같은 방법으로 데이터를 잘라 임시 보관.
-        column_list[0] = strtok(temp, "|");
+        column_list[0] = strtok(temp, "|\n");
         for (int i = 1; i < atoi(meta_data[2]); i++) {
-            column_list[i] = strtok(NULL, "|");
-        }
+            column_list[i] = strtok(NULL, "|\n");
+        }        
         // 해당 자료로 새로운 레코드 생성.
-        for (int i = 0; i < atoi(meta_data[2]); i++) {
-            new_record(table, column_list, atoi(meta_data[2]));
-        }
+        if (column_list[0] == NULL)
+            break;
+        new_record(table, column_list, atoi(meta_data[2]));
     }
 
     // 임시 문자열 배열 삭제
@@ -833,9 +895,8 @@ int convert_table_to_file(Table* target) {
     // 파일의 url
     char url[200];
     // 별도 실행시에는 아래 주석 코드로 대체할 것.
-    // sprintf(url, "%s%s%s", "C:\\Users\\sjyhc\\Desktop\\programming\\C_Cpp\\homeworks\\CollegeProject\\data\\", target->name, ".txt");
     sprintf(url, "%s%s%s", "homeworks\\CollegeProject\\data\\", target->name, ".txt");
-    // sprintf(url, "%s%s%S", "data\\", target->name, ".txt");
+    // sprintf(url, "data\\%s.txt", target->name);
     fp = fopen(url, "wt");
     
     // 메타데이터 입력
@@ -849,7 +910,6 @@ int convert_table_to_file(Table* target) {
     if (target->num_col != 0) {
         while(1) {
             strcat(temp_col, target->cursor->pos_col->name);
-            move_cursor_col(target->cursor, 1);
             if (target->cursor->pos_col->next != NULL) {
                 strcat(temp_col, "|");
                 move_cursor_col(target->cursor, 1);
@@ -880,10 +940,10 @@ int convert_table_to_file(Table* target) {
             for (int i = 0; i < target->num_col; i++) {
                 strcat(temp_record, target->cursor->pos_record[i]->content);
                 if (i < target->num_col - 1) {
-                    strcat(temp_col, "|");
+                    strcat(temp_record, "|");
                 }
                 else {
-                    strcat(temp_col, "\n");
+                    strcat(temp_record, "\n");
                 }
             }
             fprintf(fp, "%s", temp_record);

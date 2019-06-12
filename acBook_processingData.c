@@ -31,10 +31,11 @@ Table* operator_in (Table* target, Table* condition, Table_list** total_list) {
         for (int j = 0; j < condition->num_record; j++) {
             condition->cursor->pos_record[0] = condition->cursor->pos_record[0]->next;
             // 값이 같으면 해당 인덱스의 값을 1 올림
-            if (strcmp(target->cursor->pos_record[index]->content, condition->cursor->pos_record[0]->content)) {
+            if (strcmp(target->cursor->pos_record[index]->content, condition->cursor->pos_record[0]->content) == 0) {
                 num_element[j] += 1;
             }
         }
+        move_cursor_record(condition->cursor, 0);
     }
 
     // 순회가 끝나면 커서를 다시 초기화
@@ -50,6 +51,7 @@ Table* operator_in (Table* target, Table* condition, Table_list** total_list) {
     }
     // 만약 하나도 검색된 사항이 없다면 NULL 반환
     if (checker == 0) {
+        free(num_element);
         return NULL;
     }
 
@@ -60,6 +62,7 @@ Table* operator_in (Table* target, Table* condition, Table_list** total_list) {
     Table* temp_table = new_table(temp_table_name, total_list[1]);
     // 내용은 condition과 유사하나, 해당 요소가 얼마나 확인되었는지 체크하는 컬럼이 하나 더 추가됨.
     char* temp_contents[1];
+    move_cursor_record(condition->cursor, 1);
     new_col(temp_table, condition->cursor->pos_col->name);
     for (int i = 0; i < condition->num_record; i++) {
         temp_contents[0] = condition->cursor->pos_record[0]->content;
@@ -68,7 +71,8 @@ Table* operator_in (Table* target, Table* condition, Table_list** total_list) {
     new_col(temp_table, (char*)"num");
 
     // 임시 저장되었던 배열의 값을 전달.
-    char* temp;
+    char* temp = (char*) malloc(5 * sizeof(char));
+    move_cursor_record(temp_table->cursor, 0);
     move_cursor_by_colName(temp_table->cursor, (char*)"num");
     for (int i = 0; i < temp_table->num_record; i++) {
         move_cursor_record(temp_table->cursor, 1);
@@ -80,6 +84,7 @@ Table* operator_in (Table* target, Table* condition, Table_list** total_list) {
     set_table_return(temp_table, total_list[2]);
 
     // 임시로 동적할당한 객체들 전부 제거.
+    free(temp);
     free(num_element);
 
     // 임시 테이블 객체를 반환.

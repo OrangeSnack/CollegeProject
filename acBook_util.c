@@ -25,8 +25,8 @@ void inputSys(const int secure, char *p1)
 
 		strcat(s1, temp);
 	}
-
-	strcpy(p1, s1);
+  
+	strcpy(p1, strtok(s1, "\n"));
 }
 
 //두 문자열 입력받고 다르면 0, 같으면 1 출력

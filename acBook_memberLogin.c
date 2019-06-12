@@ -21,7 +21,7 @@ int loginMain()
   printf("\n");
 
   //DB에 ID,PW 전송
-  login(id,pw);
+  // login(id,pw);
 
   boolean = loginCheck(id, pw);
 

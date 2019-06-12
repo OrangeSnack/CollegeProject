@@ -24,22 +24,22 @@ char* pwOut(char *pw);
 
 ////양희찬
 
-//수정 명령
-int modify(char* id, char* pw);
+//로그인 명령
+int login(char* id, char* pw);
 
 //가입 명령
 int registeration(char* id, char* pw);
 
-//로그인 명령
-int login(char* id, char* pw);
+//수정 명령
+int modify(char* id, char* pw);
 
 //로그인 명령 성공여부 분석해서 TRUE, FALSE 반환해주는 함수
-int loginBool();
+int loginBool(Table_list* return_table_list);
 
 //회원가입 명령 성공여부 분석해서 TRUE, FALSE 반환해주는 함수
-int registerationBool();
+int registerationBool(Table_list* return_table_list);
 
 //회원정보수정명령 성공여부 분석해서 TRUE, FALSE 반환해주는 함수
-int modifyBool();
+int modifyBool(Table_list* return_table_list);
 
 #endif
