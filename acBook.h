@@ -23,4 +23,7 @@
     #include "acBook_memberLogin.h"
     #include "acBook_memberModify.h"
 
+    // 가계부 시스템
+    #include "acBook_dataManager.h"
+
 #endif

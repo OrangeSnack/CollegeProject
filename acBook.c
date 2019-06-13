@@ -48,10 +48,13 @@ int main() {
             continue;
         }
         else if(selection == 2) {
+            acBook_mainPage();
+            /*
             system("cls");
             printf("\n구현안된 항목입니다..\n메인메뉴로 돌아갑니다\n");
             system("pause");
             system("cls");
+             */
             continue;
         }
         else if (selection == 3) {

@@ -9,16 +9,6 @@ login_check| convert_file_to_table(memberDB, main_table_list) new_table(temp_mem
 register_check| convert_file_to_table(memberDB, main_table_list) new_table(temp_member_check, temp_table_list) new_col(temp_member_check, temp_table_list, id) new_record(temp_member_check, temp_table_list, $1) operator_in(memberDB, main_table_list, temp_member_check, temp_table_list) 
 register| convert_file_to_table(memberDB, main_table_list) new_record(memberDB, main_table_list, $1, $2); convert_table_to_file(memberDB, main_table_list) 
 modify| convert_file_to_table(memberDB, main_table_list) move_cursor_record_by_data(memberDB, main_table_list, $1, id) edit_data(memberDB, main_table_list, $2) move_cursor_col(memberDB, main_table_list, 1) edit_data(memberDB, main_table_list, $4) convert_table_to_file(memberDB, main_table_list) 
-
-
-
-
-
-
-
-
-
-
-
-
+get_acBook| convert_file_to_table($1, main_table_list) set_table_return($1, main_table_list)
+new_acBook| new_table($1, main_table_list) new_col($1, main_table_list, "시리얼 넘버") new_col($1, main_table_list, "거래 일시") new_col($1, main_table_list, "거래 내용") new_col($1, main_table_list, "금액") convert_table_to_file($1, main_table_list) set_table_return($1, main_table_list)
 

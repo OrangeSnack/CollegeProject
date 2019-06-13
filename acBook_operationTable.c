@@ -905,7 +905,7 @@ int convert_table_to_file(Table* target) {
     fprintf(fp, "num_col : %d\n", target->num_col);
     fprintf(fp, "num_record : %d\n", target->num_record);
     // 열 이름 입력 구역
-    char* temp_col = (char*) calloc(50, sizeof(char));
+    char* temp_col = (char*) calloc(200, sizeof(char));
     move_cursor_default(target->cursor);
     if (target->num_col != 0) {
         while(1) {
@@ -925,6 +925,7 @@ int convert_table_to_file(Table* target) {
     // 열 입력과 유사하나, 모든 레코드가 입력될 때까지 같은 동작을 계속 반복.
     fprintf(fp, "data : \n");
     char* temp_record = (char*) calloc(1000, sizeof(char));
+    char* temp_data = (char*) calloc(1000, sizeof(char));
     if (target->num_record != 0) {
         while(1) {
             // 임시 문자열 초기화
@@ -938,7 +939,8 @@ int convert_table_to_file(Table* target) {
             }
             // 파일 출력.
             for (int i = 0; i < target->num_col; i++) {
-                strcat(temp_record, target->cursor->pos_record[i]->content);
+                sprintf(temp_data, "\" %s \"", target->cursor->pos_record[i]->content);
+                strcat(temp_record, temp_data);
                 if (i < target->num_col - 1) {
                     strcat(temp_record, "|");
                 }
@@ -950,6 +952,7 @@ int convert_table_to_file(Table* target) {
         }
     }
     free(temp_record);
+    free(temp_data);
 
     fclose(fp);
 }

@@ -10,6 +10,7 @@ Table_list* order_manager(char* _order_string) {
     int i = 0;
     int tag = 0;                // 문자열이 잘린 시점을 임시로 저장할 태그.
     int repeat_check = 0;       // 명령 실행이 반복되고 있는지 확인.
+    int string_check = 0;       // 인수값에 "가 들어와서 공백을 포함한 모든 문자를 토큰 분리 없이 읽어야 되는지 여부.
     show_error_message("order_manager() before root", 100);
 
     // ouder_queue 객체 생성 및 초기화
@@ -27,7 +28,31 @@ Table_list* order_manager(char* _order_string) {
         // 문자열 order 변환
         while(1) {
             // '(' 가 입력되면 START 형식의 order로 변형
-            if (order_string[tag + i] == '(') {
+            if (string_check == 1) {
+                if (order_string[tag+i] == '\"') {
+                    temp[i] = '\0';
+                    order = convert_str_to_order(order, temp, i, ADD);
+                    strcpy(temp, "");
+                    tag += i + 1;
+                    i = 0;
+                    string_check = 0;
+                }
+                else if (order_string[tag + 1] == '\0')
+                    break;
+                else {
+                    temp[i] = order_string[tag + i];
+                    i += 1;
+                }
+            }
+            else if (order_string[tag + 1] == '\"') {
+                temp[i] = '\0';
+                order = convert_str_to_order(order, temp, i, ADD);
+                strcpy(temp, "");
+                tag += i + 1;
+                i = 0;
+                string_check = 1;
+            }
+            else if (order_string[tag + i] == '(') {
                 temp[i] = '\0';
                 order = convert_str_to_order(order, temp, i, START);
                 strcpy(temp, "");
