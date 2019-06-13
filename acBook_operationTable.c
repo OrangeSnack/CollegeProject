@@ -779,8 +779,8 @@ Table* convert_file_to_table(char* name, Table_list* table_list) {
     FILE* fp;
     char* url = (char*) malloc(100 * sizeof(char));
     // 작업 환경에서만 필요한 코드. 다른 곳에서 단독으로 실행할 땐 아래 주석 코드로 대체
-    sprintf(url, "%s%s%s", "homeworks\\CollegeProject\\data\\", name, ".txt");
-    // sprintf(url, "data\\%s.txt", name);
+    // sprintf(url, "%s%s%s", "homeworks\\CollegeProject\\data\\", name, ".txt");
+    sprintf(url, "..\\data\\%s.txt", name);
     fp = fopen(url, "r");       // 읽기 모드로 파일 오픈
     // 파일이 존재하는지 확인. 없으면 예외처리
     if (fp == NULL) {
@@ -895,8 +895,8 @@ int convert_table_to_file(Table* target) {
     // 파일의 url
     char url[200];
     // 별도 실행시에는 아래 주석 코드로 대체할 것.
-    sprintf(url, "%s%s%s", "homeworks\\CollegeProject\\data\\", target->name, ".txt");
-    // sprintf(url, "data\\%s.txt", target->name);
+    // sprintf(url, "%s%s%s", "homeworks\\CollegeProject\\data\\", target->name, ".txt");
+    sprintf(url, "..\\data\\%s.txt", target->name);
     fp = fopen(url, "wt");
     
     // 메타데이터 입력
