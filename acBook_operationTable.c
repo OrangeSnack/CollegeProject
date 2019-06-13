@@ -801,7 +801,13 @@ Table* convert_file_to_table(char* name, Table_list* table_list) {
     // 3 : 행(레코드) 갯수
     // 4 : 열 목록
     // 5 : 행 목록. 사용안함.
-    char meta_data[6][50]; 
+    char* meta_data[6]; 
+    meta_data[0] = (char*) malloc(50 * sizeof(char));
+    meta_data[1] = (char*) malloc(50 * sizeof(char));
+    meta_data[2] = (char*) malloc(50 * sizeof(char));
+    meta_data[3] = (char*) malloc(50 * sizeof(char));
+    meta_data[4] = (char*) malloc(250 * sizeof(char));
+    meta_data[5] = (char*) malloc(5 * sizeof(char));
     char* compare_text[6] = {
         (char*)"name : ",
         (char*)"date : ", 
@@ -846,9 +852,9 @@ Table* convert_file_to_table(char* name, Table_list* table_list) {
     }
 
     // column : 이후 문장을 "|" 토큰을 기준으로 전부 잘라내 따로 보관함.
-    column_list[0] = strtok(meta_data[4], "|");
+    column_list[0] = strtok(meta_data[4], "\"|");
     for (int i = 1; i < atoi(meta_data[2]); i++) {
-        column_list[i] = strtok(NULL, "|");
+        column_list[i] = strtok(NULL, "\"|");
     }
 
     // 해당 데이터로 새로운 열을 생성.
@@ -858,7 +864,8 @@ Table* convert_file_to_table(char* name, Table_list* table_list) {
 
     // 레코드 삽입
     for (int i = 0; i < atoi(meta_data[2]); i++) {
-        realloc(column_list[i], 250 * sizeof(char));
+        free(column_list[i]);
+        column_list[i] = (char*) malloc(250 * sizeof(char));
     }
 
     // 파일의 끝에 도달할 때 까지
@@ -866,9 +873,9 @@ Table* convert_file_to_table(char* name, Table_list* table_list) {
 
         // 위에서 사용한 리스트 재활용.
         // 위와 같은 방법으로 데이터를 잘라 임시 보관.
-        column_list[0] = strtok(temp, "|\n");
+        column_list[0] = strtok(temp, "\"|\n");
         for (int i = 1; i < atoi(meta_data[2]); i++) {
-            column_list[i] = strtok(NULL, "|\n");
+            column_list[i] = strtok(NULL, "\"|\n");
         }        
         // 해당 자료로 새로운 레코드 생성.
         if (column_list[0] == NULL)
@@ -881,6 +888,10 @@ Table* convert_file_to_table(char* name, Table_list* table_list) {
         free(column_list[i]);
     }
     free(column_list);
+
+    for (int i = 0; i < 6; i++) {
+        free(meta_data[i]);
+    }
 
     // 파일 객체 삭제
     fclose(fp);
@@ -918,7 +929,7 @@ int convert_table_to_file(Table* target) {
                 break;
         }
     }
-    fprintf(fp, "column : %s\n", temp_col);
+    fprintf(fp, "column : %s;\n", temp_col);
     free(temp_col);
 
     // 레코드 입력 구역
@@ -945,7 +956,7 @@ int convert_table_to_file(Table* target) {
                     strcat(temp_record, "|");
                 }
                 else {
-                    strcat(temp_record, "\n");
+                    strcat(temp_record, ";\n");
                 }
             }
             fprintf(fp, "%s", temp_record);

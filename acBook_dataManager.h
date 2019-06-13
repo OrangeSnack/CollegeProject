@@ -18,7 +18,7 @@
 
     // 거래내역 출력. (20칸씩 잘라서)
     // select UI를 이용한 거래내역 선택 기능 제공
-    void acBook_show_list(Table* table);
+    void acBook_show_list(Table* table, int num, int total_in, int total_out, int total_sum);
 
     // 거래내역 추가.
     // 빈칸을 선택하면 거래내역을 추가함.

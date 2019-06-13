@@ -40,11 +40,35 @@ void acBook_mainPage() {
                 char* serial_num[20];
                 // 임시로 사용할 테이블 포인터
                 Table* table = return_list->address[1];
+                // 소계용 데이터
+                int num = 0;            // 거래 갯수.
+                int total_out = 0;      // 총 지출
+                int total_in  = 0;      // 총 수익
+                int total_sum = 0;      // 총계
+                int credit_index;       // 금액란 인덱스
+
+                // 소계 데이터 삽입
+                move_cursor_default(table->cursor);
+                credit_index = get_index_by_name(table, (char*)"credit");
+                while(1) {
+                    int temp;
+                    if (table->cursor->pos_record[credit_index]->next != NULL) {
+                        table->cursor->pos_record[credit_index] = table->cursor->pos_record[credit_index]->next;
+                        if ((temp = atoi(table->cursor->pos_record[credit_index]->content)) >= 0) {
+                            total_in += temp;
+                        }
+                        else if ((temp = atoi(table->cursor->pos_record[credit_index]->content)) < 0) {
+                            total_out += temp;
+                        }
+                        total_sum += temp;
+                        num += 1;
+                    }
+                }
                 move_cursor_default(table->cursor);
                 // 거래 내역 출력.
-                acBook_show_list(table);
+                acBook_show_list(table, num, total_in, total_out, total_sum);
                 // 해당 20칸의 시리얼 넘버를 임시로 받아옴.
-                for (int i = 0, j = 0; i < 20; i++) {
+                for (int i = 0, j = 0; ; i++) {
                     if (table->cursor->pos_record == NULL) {
                        serial_num[i] = NULL;
                     }
@@ -56,9 +80,12 @@ void acBook_mainPage() {
                         serial_num[i] = table->cursor->pos_record[0]->content;
                         j += 1;
                     }
-                    // 모든 순회 이후 커서는 다시 검색 시작점으로.
-                    for ( ; j > 0; j--) {
-                        move_cursor_record(table->cursor, -1);
+                    if (i == 20) {
+                        // 모든 순회 이후 커서는 다시 검색 시작점으로.
+                        for ( ; j > 0; j--) {
+                            move_cursor_record(table->cursor, -1);
+                        }
+                        break;
                     }
                 }
                 // 이전 입력에 따른 오류 메세지를 처리.
@@ -131,14 +158,51 @@ void acBook_mainPage() {
     }
 }
 
-void acBook_show_list(Table* table) {
-    printf("미구현된 기능입니다.\n");
+void acBook_show_list(Table* table, int num, int total_in, int total_out, int total_sum) {
+    move_cursor_col(table->cursor, 0);
+    for (int i = 0; i < table->num_col; i++)
+        printf("%s\t", table->cursor->pos_col->name);
+    printf("\n==========================================\n");
+    for (int i = 0, j = 0; ; i++) {
+        printf("\t");
+        // 다음 행이 비어있지 않은 경우
+        if (table->cursor->pos_record != NULL || table->cursor->pos_record[0]->next != NULL) {
+            for (int k = 0; k < table->num_col; k++) {
+                // 해당 레코드 포인터가 NULL 이거나, 혹은 데이터가 NULL 인 경우.
+                if (table->cursor->pos_record != NULL) {
+                    if (table->cursor->pos_record[k]->content != NULL)
+                        printf("%s\t", table->cursor->pos_record[k]->content);
+                    else 
+                        printf(".\t");
+                }
+                else
+                    printf(".\t");
+            }
+            printf("\n");     
+            j += 1;   
+        }
+        else {
+            printf("-\n");
+        }
+
+        // 커서 복구
+        if (i == 20) {
+            for ( ; j > 0; j++) {
+                move_cursor_record(table->cursor, -1);
+            }
+        }
+    }
+    printf("\n==========================================\n");
+    printf("총 거래 갯수 : %d\n", num);
+    printf("총 수익 : %d\n", total_in);
+    printf("총 지출 : %d\n", total_out);
+    printf("총계 : %d\n", total_sum);
 }
 
 void acBook_add_list(char* serial_num, Table* table) {
-    printf("미구현된 기능입니다.\n");
+    //printf("미구현된 기능입니다.\n");
 }
 
 void acBook_edit_list(char* serial_num, Table* table) {
-    printf("미구현된 기능입니다.\n");
+    //printf("미구현된 기능입니다.\n");
 }

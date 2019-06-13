@@ -1,6 +1,9 @@
 name : acBook_123
 date : not implement
 num_col : 4
-num_record : 0
-column : 시리얼넘버"|거래일시"|거래내용"|금액"
+num_record : 3
+column : "serial number"|"account date"|"account content"|"credit";
 data : 
+"1234"|"19-06-13. 13:00"|"account test 1"|300 ;
+"5678"|"19-06-13. 13:10"|"account test 2"|-600; 
+"9123"|"19-06-13. 13:20"|"account test 3"|500 ;
